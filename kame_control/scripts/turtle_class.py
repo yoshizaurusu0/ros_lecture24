@@ -38,6 +38,7 @@ class Turtle1:
         self.pos.theta = yaw
         rospy.loginfo("/odom Pos (x:%f, y:%f, z:%f)", msg.pose.pose.position.x, msg.pose.pose.position.y, msg.pose.pose.position.z)
         rospy.loginfo("/odom Pose (roll:%f, pitch:%f, yaw:%f) ", roll, pitch, yaw)
+
     def move_turtle1(self, x, theta, sec):
         tim = 0
         rate = rospy.Rate(10)
@@ -46,24 +47,46 @@ class Turtle1:
             tim = tim + 1
             rate.sleep()
         self.set_speed(0.0, 0.0)
-        def move_straight(self, x, length):
-            init_x = self.pos.x
-            init_y = self.pos.y
-            d = 0.0
-            rate = rospy.Rate(50) 
-            while d < length:
-            	d = math.sqrt((self.pos.x - init_x) ** 2 + (self.pos.y - init_y) ** 2)
-            	self.set_speed(x, 0.0)
-            	rate.sleep()
-            self.set_speed(0.0, 0.0)
 
+    def move_straight(self, x, length):
+        init_x = self.pos.x
+        init_y = self.pos.y
+        d = 0.0
+        rate = rospy.Rate(50) 
+        while d < length:
+            d = math.sqrt((self.pos.x - init_x) ** 2 + (self.pos.y - init_y) ** 2)
+            self.set_speed(x, 0.0)
+            rate.sleep()
+        self.set_speed(0.0, 0.0)
+    def move_roll(self, theta, rad):
+        rate = rospy.Rate(50) 
+        while (self.pos.theta-rad)**2 > 0.0004:
+            self.set_speed(0.0, theta)
+            rate.sleep()
+        self.set_speed(0.0, 0.0)
+
+ 
 
 
 
 if __name__ == '__main__':
     turtle1 = Turtle1()
     rospy.loginfo("start")
-    turtle1.move_turtle1(0.2, 0.3, 5.0)
-    turtle1.move_straight(-0.2,1.0)
+    turtle1.move_straight(0.2,1.0)
+    turtle1.move_turtle1(0,0,0.5)
+    turtle1.move_roll(0.5, math.pi/2)
+    turtle1.move_turtle1(0,0,0.5)
+    turtle1.move_straight(0.2,1.0)
+    turtle1.move_turtle1(0,0,0.5)
+    turtle1.move_roll(0.5, math.pi)
+    turtle1.move_turtle1(0,0,0.5)
+    turtle1.move_straight(0.2,1.0)
+    turtle1.move_turtle1(0,0,0.5)
+    turtle1.move_roll(0.5, -math.pi/2)
+    turtle1.move_turtle1(0,0,0.5)
+    turtle1.move_straight(0.2,1.0)
+    turtle1.move_turtle1(0,0,0.5)
+    turtle1.move_roll(0.5, 0)
+    turtle1.move_turtle1(0,0,0.5)
     rospy.loginfo("end")
-   
+
